@@ -1,0 +1,12 @@
+*/bin
+*/obj
+*.suo
+*.log
+*.user
+*/images
+*/build
+*/ErrorLogs/
+*/build/
+*.user
+packages/
+*.orig
