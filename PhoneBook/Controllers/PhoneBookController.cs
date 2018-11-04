@@ -12,7 +12,7 @@ namespace PhoneBook.Controllers
 {
     public class PhoneBookController : ApiController
     {
-        [Route("api/Contact/")]
+        [Route("api/Contacts/")]
         [HttpPost]
         public IHttpActionResult AddContactDetails([FromBody] ContactDetailDTO contactDto)
         {
@@ -37,7 +37,7 @@ namespace PhoneBook.Controllers
 
                 Mapper.CreateMap<ContactDetailDTO, ContactDetail>();
                 ContactDetail contactDetail = Mapper.Map<ContactDetail>(contactDto);
-                ContactDetails conntactDetailBL = new ContactDetails();
+                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
                 bool detailAdded = conntactDetailBL.AddContactDetail(contactDetail);
                 if (detailAdded)
                     return Ok("Contact Detail Added Successfully");
@@ -50,14 +50,14 @@ namespace PhoneBook.Controllers
             }
         }
 
-        [Route("api/Contact/{mobileNumber}")]
+        [Route("api/Contacts/{name}")]
         [HttpDelete]
-        public IHttpActionResult DeleteContactDetails(string mobileNumber)
+        public IHttpActionResult DeleteContactDetails(string name)
         {
             try
             {
-                ContactDetails conntactDetailBL = new ContactDetails();
-                bool detailAdded = conntactDetailBL.DeleteContactDetail(mobileNumber);
+                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
+                bool detailAdded = conntactDetailBL.DeleteContactDetail(name);
                 if (detailAdded)
                     return Ok("Contact Detail Deleted Successfully");
                 else
@@ -69,21 +69,21 @@ namespace PhoneBook.Controllers
             }
         }
 
-        [Route("api/Contact/")]
+        [Route("api/Contacts/")]
         [HttpGet]
-        public IHttpActionResult GetAllContactDetails(int pageId = 1)
+        public IHttpActionResult GetAllContactDetails(int page = 1)
         {
             try
             {
-                ContactDetails conntactDetailBL = new ContactDetails();
-                IEnumerable<ContactDetail> contactDetails = conntactDetailBL.GetAllContactDetail(pageId);
-                Mapper.CreateMap<ContactDetail, ContactDetailDTO>();
-                IEnumerable<ContactDetailDTO> contactDetailDto = Mapper.Map<IEnumerable<ContactDetailDTO>>(contactDetails);
-                if (contactDetailDto.Count() > 0)
+                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
+                IEnumerable<ContactDetail> contactDetails = conntactDetailBL.GetAllContactDetail(page);
+                if (contactDetails != null && contactDetails.Count() > 0)
                 {
+                    Mapper.CreateMap<ContactDetail, ContactDetailDTO>();
+                    IEnumerable<ContactDetailDTO> contactDetailDto = Mapper.Map<IEnumerable<ContactDetailDTO>>(contactDetails);
                     return Json(contactDetailDto);
                 }
-                return NotFound();
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
             }
             catch (Exception)
             {
@@ -92,7 +92,7 @@ namespace PhoneBook.Controllers
             
             
         }
-        [Route("api/Contact/")]
+        [Route("api/Contacts/")]
         [HttpPut]
         public IHttpActionResult UpdateContactDetails(string name, [FromBody] ContactDetailDTO updatedDetails)
         {
@@ -121,7 +121,7 @@ namespace PhoneBook.Controllers
 
                 Mapper.CreateMap<ContactDetailDTO, ContactDetail>();
                 ContactDetail contactDetail = Mapper.Map<ContactDetail>(updatedDetails);
-                ContactDetails conntactDetailBL = new ContactDetails();
+                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
                 bool detailAdded = conntactDetailBL.UpdateContactDetail(name, contactDetail);
                 if (detailAdded)
                     return Ok("Contact Detail Updated Successfully");
@@ -134,14 +134,14 @@ namespace PhoneBook.Controllers
             }
         }
 
-        [Route("api/Contact/search/")]
+        [Route("api/Contacts/search/")]
         [HttpGet]
-        public IHttpActionResult SearchContactDetails(string searchString, int pageId = 1)
+        public IHttpActionResult SearchContactDetails(string str, int pageId = 1)
         {
             try
             {
-                ContactDetails conntactDetailBL = new ContactDetails();
-                IEnumerable<ContactDetail> searchedResult = conntactDetailBL.SearcheContactDetail(searchString, pageId);
+                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
+                IEnumerable<ContactDetail> searchedResult = conntactDetailBL.SearcheContactDetail(str, pageId);
                 Mapper.CreateMap<ContactDetail, ContactDetailDTO>();
                 IEnumerable<ContactDetailDTO> searchedContactDto = Mapper.Map<IEnumerable<ContactDetailDTO>>(searchedResult);
                 if (searchedContactDto != null && searchedContactDto.Count() > 0)

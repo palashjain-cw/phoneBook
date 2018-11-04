@@ -1,5 +1,8 @@
-﻿namespace Entities
+﻿using System;
+
+namespace Entities
 {
+    [Serializable]
     public class ContactDetail
     {
         public int Id { get; set; }

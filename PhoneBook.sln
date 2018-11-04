@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{D6BF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{DB13FB61-152B-4683-B42A-02B2EEE2D40A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cache", "Cache\Cache.csproj", "{A66E856D-491A-4B1C-9E82-975DCE49864B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{23298DEE-BB02-4163-9AC3-57998EAB6422}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{DB13FB61-152B-4683-B42A-02B2EEE2D40A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB13FB61-152B-4683-B42A-02B2EEE2D40A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB13FB61-152B-4683-B42A-02B2EEE2D40A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A66E856D-491A-4B1C-9E82-975DCE49864B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A66E856D-491A-4B1C-9E82-975DCE49864B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A66E856D-491A-4B1C-9E82-975DCE49864B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A66E856D-491A-4B1C-9E82-975DCE49864B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23298DEE-BB02-4163-9AC3-57998EAB6422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23298DEE-BB02-4163-9AC3-57998EAB6422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23298DEE-BB02-4163-9AC3-57998EAB6422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23298DEE-BB02-4163-9AC3-57998EAB6422}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

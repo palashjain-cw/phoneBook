@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Utility;
 
 namespace PhoneBook
 {
@@ -17,6 +18,7 @@ namespace PhoneBook
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            CacheManager cacheManager = new CacheManager();
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }

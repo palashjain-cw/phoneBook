@@ -22,15 +22,6 @@ namespace DAL
                 param.Add("Email", contactDetail.Email);
                 var query = @"Insert into ContactDetail (Mobile , Name, Email)
                               values(@mobile, @Name, @Email);";
-                //var query = @"Create Table ContactDetail 
-                //                (
-                //                   Id int Primary Key Auto_Increment,
-                //                    Mobile varchar(10) unique,
-                //                    Name varchar(25),
-                //                    Email varchar(30) unique)";
-
-
-
                 using (IDbConnection conn = new MySqlConnection(_connString))
                 {
                     return conn.Execute(query, param) > 0;
@@ -43,13 +34,13 @@ namespace DAL
         }
 
 
-        public bool DeleteContactDetail(string mobileNumber)
+        public bool DeleteContactDetail(string name)
         {
             try
             {
                 var param = new DynamicParameters();
-                param.Add("mobile", mobileNumber);
-                var query = @"DELETE FROM ContactDetail WHERE Mobile = @mobile";
+                param.Add("name", name);
+                var query = @"DELETE FROM ContactDetail WHERE Name = @name";
                 using (IDbConnection conn = new MySqlConnection(_connString))
                 {
                     return conn.Execute(query, param, commandType: CommandType.Text) > 0;
@@ -61,18 +52,16 @@ namespace DAL
             }
         }
 
-        public IEnumerable<ContactDetail> GetAllContactDetail(int pageId)
+        public List<ContactDetail> GetAllContactDetail(char startingChar)
         {
             try
             {
-                int recordsFrom = (pageId - 1) * _pageSize;
                 var param = new DynamicParameters();
-                param.Add("offset", recordsFrom);
-                param.Add("Limit", _pageSize);
-                var query = @"select * from ContactDetail order by Id LIMIT @Limit OFFSET @offset";
+                param.Add("startingChar", startingChar);
+                var query = @"select * from ContactDetail where LEFT(Name , 1) = @startingchar order by Name;";
                 using (IDbConnection conn = new MySqlConnection(_connString))
                 {
-                    return conn.Query<ContactDetail>(query,param, commandType: CommandType.Text);
+                    return conn.Query<ContactDetail>(query,param, commandType: CommandType.Text).AsList();
                 }
             }
             catch (Exception ex)
@@ -121,6 +110,27 @@ namespace DAL
                 using (IDbConnection conn = new MySqlConnection(_connString))
                 {
                     return conn.Query<ContactDetail>(query,param, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public List<CharCountMapping> GetContactCountByChar()
+        {
+            try
+            {
+               
+                var query = @"SELECT
+                            LEFT(Name, 1) as InitialChar,
+                            COUNT(*) AS Total
+                            FROM ContactDetail
+                            GROUP BY LEFT(Name, 1)
+                            Order By Left(Name, 1);";
+                using (IDbConnection conn = new MySqlConnection(_connString))
+                {
+                    return conn.Query<CharCountMapping>(query, commandType: CommandType.Text).AsList();
                 }
             }
             catch (Exception ex)
