@@ -12,7 +12,7 @@ namespace PhoneBook.Controllers
 {
     public class PhoneBookController : ApiController
     {
-        [Route("api/Contacts/")]
+        [Route("api/contacts/")]
         [HttpPost]
         public IHttpActionResult AddContactDetails([FromBody] ContactDetailDTO contactDto)
         {
@@ -50,7 +50,7 @@ namespace PhoneBook.Controllers
             }
         }
 
-        [Route("api/Contacts/{name}")]
+        [Route("api/contacts/{name}")]
         [HttpDelete]
         public IHttpActionResult DeleteContactDetails(string name)
         {
@@ -69,7 +69,7 @@ namespace PhoneBook.Controllers
             }
         }
 
-        [Route("api/Contacts/")]
+        [Route("api/contacts/")]
         [HttpGet]
         public IHttpActionResult GetAllContactDetails(int page = 1)
         {
@@ -92,7 +92,7 @@ namespace PhoneBook.Controllers
             
             
         }
-        [Route("api/Contacts/")]
+        [Route("api/contacts/")]
         [HttpPut]
         public IHttpActionResult UpdateContactDetails(string name, [FromBody] ContactDetailDTO updatedDetails)
         {
@@ -134,14 +134,14 @@ namespace PhoneBook.Controllers
             }
         }
 
-        [Route("api/Contacts/search/")]
+        [Route("api/contacts/search/")]
         [HttpGet]
-        public IHttpActionResult SearchContactDetails(string str, int pageId = 1)
+        public IHttpActionResult SearchContactDetails(string str, int page = 1)
         {
             try
             {
                 ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
-                IEnumerable<ContactDetail> searchedResult = conntactDetailBL.SearcheContactDetail(str, pageId);
+                IEnumerable<ContactDetail> searchedResult = conntactDetailBL.SearcheContactDetail(str, page);
                 Mapper.CreateMap<ContactDetail, ContactDetailDTO>();
                 IEnumerable<ContactDetailDTO> searchedContactDto = Mapper.Map<IEnumerable<ContactDetailDTO>>(searchedResult);
                 if (searchedContactDto != null && searchedContactDto.Count() > 0)

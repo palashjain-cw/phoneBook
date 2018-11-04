@@ -12,6 +12,7 @@ namespace Utility
     {
         
         private static bool _useMemcache = ConfigurationManager.AppSettings["UseMemcache"] == "true" ? true : false;
+        private static MemcachedClient _client = new MemcachedClient();
 
         public static T GetFromCache<T>(string key, TimeSpan cacheDuration, Func<T> callback)
         {
@@ -21,7 +22,7 @@ namespace Utility
             {
                 if (_useMemcache)
                 {
-                    using (MemcachedClient _client = new MemcachedClient())
+                    //using (MemcachedClient _client = new MemcachedClient())
                     {
                         t = (T)_client.Get(key);
                         if (t == null)
@@ -46,7 +47,7 @@ namespace Utility
                     return callback();
                 }
             }
-            catch (Exception )
+            catch (Exception ex )
             {
                 
             }
@@ -62,7 +63,7 @@ namespace Utility
                 {
                     lock (key)
                     {
-                        using (MemcachedClient _client = new MemcachedClient())
+                        //using (MemcachedClient _client = new MemcachedClient())
                         {
                             return _client.Remove(key);
                         }
