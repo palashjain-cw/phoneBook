@@ -5,10 +5,11 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using Dapper;
 using System.Configuration;
+using Interface;
 
 namespace DAL
 {
-    public class ContactsDAL
+    public class ContactsDAL : IContactsDetailsDAL
     {
         private string _connString = ConfigurationManager.ConnectionStrings["DatabaseConnect"].ConnectionString;
         private int _pageSize = Convert.ToInt32(ConfigurationManager.AppSettings["PageSize"]);

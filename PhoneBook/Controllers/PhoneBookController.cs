@@ -3,6 +3,7 @@ using BL;
 using DTOs;
 using Entities;
 using FluentValidation.Results;
+using Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,12 @@ namespace PhoneBook.Controllers
 {
     public class PhoneBookController : ApiController
     {
+        private readonly IContactDetailsBL _contactDetailsBl;
+
+        public PhoneBookController(IContactDetailsBL contactDetailsBl)
+        {
+            _contactDetailsBl = contactDetailsBl;
+        }
         [Route("api/contacts/")]
         [HttpPost]
         public IHttpActionResult AddContactDetails([FromBody] ContactDetailDTO contactDto)
@@ -37,8 +44,9 @@ namespace PhoneBook.Controllers
 
                 Mapper.CreateMap<ContactDetailDTO, ContactDetail>();
                 ContactDetail contactDetail = Mapper.Map<ContactDetail>(contactDto);
-                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
-                bool detailAdded = conntactDetailBL.AddContactDetail(contactDetail);
+
+                bool detailAdded = _contactDetailsBl.AddContactDetail(contactDetail);
+
                 if (detailAdded)
                     return Ok("Contact Detail Added Successfully");
                 else
@@ -56,8 +64,8 @@ namespace PhoneBook.Controllers
         {
             try
             {
-                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
-                bool detailAdded = conntactDetailBL.DeleteContactDetail(name);
+                bool detailAdded = _contactDetailsBl.DeleteContactDetail(name);
+
                 if (detailAdded)
                     return Ok("Contact Detail Deleted Successfully");
                 else
@@ -75,8 +83,8 @@ namespace PhoneBook.Controllers
         {
             try
             {
-                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
-                IEnumerable<ContactDetail> contactDetails = conntactDetailBL.GetAllContactDetail(page);
+                IEnumerable<ContactDetail> contactDetails = _contactDetailsBl.GetAllContactDetail(page);
+
                 if (contactDetails != null && contactDetails.Count() > 0)
                 {
                     Mapper.CreateMap<ContactDetail, ContactDetailDTO>();
@@ -121,8 +129,9 @@ namespace PhoneBook.Controllers
 
                 Mapper.CreateMap<ContactDetailDTO, ContactDetail>();
                 ContactDetail contactDetail = Mapper.Map<ContactDetail>(updatedDetails);
-                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
-                bool detailAdded = conntactDetailBL.UpdateContactDetail(name, contactDetail);
+
+                bool detailAdded = _contactDetailsBl.UpdateContactDetail(name, contactDetail);
+
                 if (detailAdded)
                     return Ok("Contact Detail Updated Successfully");
                 else
@@ -140,10 +149,11 @@ namespace PhoneBook.Controllers
         {
             try
             {
-                ContactDetailsBL conntactDetailBL = new ContactDetailsBL();
-                IEnumerable<ContactDetail> searchedResult = conntactDetailBL.SearcheContactDetail(str, page);
+                IEnumerable<ContactDetail> searchedResult = _contactDetailsBl.SearcheContactDetail(str, page);
+
                 Mapper.CreateMap<ContactDetail, ContactDetailDTO>();
                 IEnumerable<ContactDetailDTO> searchedContactDto = Mapper.Map<IEnumerable<ContactDetailDTO>>(searchedResult);
+
                 if (searchedContactDto != null && searchedContactDto.Count() > 0)
                 {
                     return Json(searchedContactDto);

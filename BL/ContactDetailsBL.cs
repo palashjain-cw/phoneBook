@@ -1,6 +1,7 @@
 ﻿using Cache;
 using DAL;
 using Entities;
+using Interface;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,8 +9,15 @@ using System.Linq;
 
 namespace BL
 {
-    public class ContactDetailsBL
+    public class ContactDetailsBL : IContactDetailsBL
     {
+        private readonly IContactDetailsCache _contactDetailsCache;
+        private readonly IContactsDetailsDAL _contactDetailsDAL;
+        public ContactDetailsBL(IContactDetailsCache contactDetailsCache, IContactsDetailsDAL contactDetailsDAL)
+        {
+            _contactDetailsCache = contactDetailsCache;
+            _contactDetailsDAL = contactDetailsDAL;
+        }
         private int _pageSize = Convert.ToInt32(ConfigurationManager.AppSettings["PageSize"]);
         public bool AddContactDetail(ContactDetail contactDetail)
         {
@@ -19,9 +27,8 @@ namespace BL
                 bool added =  contactDAl.AddContactDetail(contactDetail);
                 if(added)
                 {
-                    ContactDetailsCache contactDetailCache = new ContactDetailsCache();
-                    contactDetailCache.RefreshKeyByChar(contactDetail.Name[0]);
-                    contactDetailCache.RefreshContactCountByChar();
+                    _contactDetailsCache.RefreshKeyByChar(contactDetail.Name[0]);
+                    _contactDetailsCache.RefreshContactCountByChar();
                 }
                 return added;
             }
@@ -38,9 +45,8 @@ namespace BL
                 bool deleted=  contactDAl.DeleteContactDetail(Name);
                 if (deleted)
                 {
-                    ContactDetailsCache contactDetailCache = new ContactDetailsCache();
-                    contactDetailCache.RefreshKeyByChar(Name[0]);
-                    contactDetailCache.RefreshContactCountByChar();
+                    _contactDetailsCache.RefreshKeyByChar(Name[0]);
+                    _contactDetailsCache.RefreshContactCountByChar();
                 }
                 return deleted;
             }
@@ -70,15 +76,14 @@ namespace BL
 
                 if (count <= recordsFrom) return null;
 
-                ContactDetailsCache contactDetailCache = new ContactDetailsCache();
 
-                List<ContactDetail> contactDetail = contactDetailCache.GetContactDetailByChar(charCount[index].InitialChar);
+                List<ContactDetail> contactDetail = _contactDetailsCache.GetContactDetailByChar(charCount[index].InitialChar);
                 contactDetail = contactDetail.Skip(recordsFrom - prevCount).ToList();
                 
                 while(contactDetail.Count < _pageSize && index < (charCount.Count-1))
                 {
                     int currentCount = contactDetail.Count;
-                    List<ContactDetail> nextIndexContactDetail = contactDetailCache.GetContactDetailByChar(charCount[index+1].InitialChar);
+                    List<ContactDetail> nextIndexContactDetail = _contactDetailsCache.GetContactDetailByChar(charCount[index+1].InitialChar);
                     int remainingCount = _pageSize - currentCount;
                     if (remainingCount < nextIndexContactDetail.Count)
                     {
@@ -107,12 +112,11 @@ namespace BL
                 
                 if (updated)
                 {
-                    ContactDetailsCache contactDetailCache = new ContactDetailsCache();
-                    contactDetailCache.RefreshKeyByChar(name[0]);
+                    _contactDetailsCache.RefreshKeyByChar(name[0]);
                     if(updatedDetails.Name[0] != name[0])
                     {
-                        contactDetailCache.RefreshKeyByChar(updatedDetails.Name[0]);
-                        contactDetailCache.RefreshContactCountByChar();
+                        _contactDetailsCache.RefreshKeyByChar(updatedDetails.Name[0]);
+                        _contactDetailsCache.RefreshContactCountByChar();
                     }
                 }
                 return updated;
@@ -127,8 +131,7 @@ namespace BL
         {
             try
             {
-                ContactsDAL contactDAl = new ContactsDAL();
-                return contactDAl.SearchContactDetail(searchString, pageId);
+                return _contactDetailsDAL.SearchContactDetail(searchString, pageId);
             }
             catch (Exception)
             {
@@ -137,9 +140,7 @@ namespace BL
         }
         private List<CharCountMapping> GetContactCountByChar()
         {
-            ContactDetailsCache contactDetailCache = new ContactDetailsCache();
-            return contactDetailCache.GetContactCountByChar();
-
+            return _contactDetailsCache.GetContactCountByChar();
         }
     }
 }

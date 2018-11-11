@@ -19,6 +19,8 @@ namespace PhoneBook
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             CacheManager cacheManager = new CacheManager();
+            UnityConfig.RegisterComponents();
+
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
